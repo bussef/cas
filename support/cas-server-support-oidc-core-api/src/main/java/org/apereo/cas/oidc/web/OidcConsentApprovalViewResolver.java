@@ -94,9 +94,8 @@ public class OidcConsentApprovalViewResolver extends OAuth20ConsentApprovalViewR
                 userInfoClaims.addAll(holder.getClaims().keySet());
                 requestedScopes.addAll(holder.getScopes());
             }));
-            supportedScopes.retainAll(requestedScopes);
-            supportedScopes.add(OidcConstants.StandardScopes.OPENID.getScope());
-            model.put("scopes", supportedScopes);
+            requestedScopes.add(OidcConstants.StandardScopes.OPENID.getScope());
+            model.put("scopes", requestedScopes);
             model.put("userInfoClaims", userInfoClaims);
         }
     }
