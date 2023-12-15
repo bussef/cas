@@ -80,10 +80,12 @@ public class OidcConsentApprovalViewResolver extends OAuth20ConsentApprovalViewR
                 model.put("dynamicTime", oidcRegisteredService.getProperties()
                     .get(RegisteredServiceProperties.OIDC_DYNAMIC_CLIENT_REGISTRATION_DATE.getPropertyName()).getValue(String.class));
             }
-            val supportedScopes = new HashSet<>(casProperties.getAuthn().getOidc().getDiscovery().getScopes());
-            supportedScopes.retainAll(oidcRegisteredService.getScopes());
-
+            
             val requestedScopes = oauthRequestParameterResolver.resolveRequestedScopes(webContext);
+            val supportedScopes = casProperties.getAuthn().getOidc().getDiscovery().getScopes();
+            requestedScopes.retainAll(supportedScopes);
+            requestedScopes.retainAll(oidcRegisteredService.getScopes());
+
             val userInfoClaims = oauthRequestParameterResolver.resolveUserInfoRequestClaims(webContext);
             webContext.getRequestParameter(OidcConstants.REQUEST_URI).ifPresent(Unchecked.consumer(uri -> {
                 val authzRequest = ticketRegistry.getTicket(uri, OidcPushedAuthorizationRequest.class);
